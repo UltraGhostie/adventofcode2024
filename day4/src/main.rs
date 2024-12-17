@@ -135,8 +135,8 @@ fn xmascheck(vec: &VecDeque<String>, i: &usize, j: &usize, a: isize , b: isize) 
 
 
 fn part2() -> io::Result<()> {
-    //let file = File::open("input2.in")?;
-    let file = File::open("test2.in")?;
+    let file = File::open("input2.in")?;
+    //let file = File::open("test2.in")?;
     let mut reader = BufReader::new(file);
     let mut vec = VecDeque::<String>::new();
 
@@ -176,27 +176,27 @@ fn x_mascheck(vec: &VecDeque<String>, i: &usize, j: &usize) -> bool {
         Ok(n) => n,
         Err(s) => { println!("{i}+0"); panic!("{s}") }
     };
-    let j0:usize = match (i).try_into() {
+    let j0:usize = match (j).try_into() {
         Ok(n) => n,
-        Err(s) => { println!("{i}+0"); panic!("{s}") }
+        Err(s) => { println!("{j}+0"); panic!("{s}") }
     };
 
     let i1:usize = match (i+1).try_into() {
         Ok(n) => n,
         Err(s) => { println!("{i}+1"); panic!("{s}") }
     };
-    let j1:usize = match (i+1).try_into() {
+    let j1:usize = match (j+1).try_into() {
         Ok(n) => n,
-        Err(s) => { println!("{i}+1"); panic!("{s}") }
+        Err(s) => { println!("{j}+1"); panic!("{s}") }
     };
 
     let i2:usize = match (i-1).try_into() {
         Ok(n) => n,
         Err(s) => { println!("{i}-1"); panic!("{s}") }
     };
-    let j2:usize = match (i-1).try_into() {
+    let j2:usize = match (j-1).try_into() {
         Ok(n) => n,
-        Err(s) => { println!("{i}-1"); panic!("{s}") }
+        Err(s) => { println!("{j}-1"); panic!("{s}") }
     };
 
     // Middle is always A
@@ -207,8 +207,8 @@ fn x_mascheck(vec: &VecDeque<String>, i: &usize, j: &usize) -> bool {
         },
         None => return false,
     };
-    println!("{i}, {j}; {i0}, {j0}: {x}");
     if x != 'A' { return false; }
+    println!("{i}, {j}; {i0}, {j0}: {x}");
 
 
 
