@@ -11,8 +11,8 @@ fn main() -> io::Result<()> {
 }
 
 fn part1() -> io::Result<()> {
-    //let file = File::open("input.in")?;
-    let file = File::open("test.in")?;
+    let file = File::open("input.in")?;
+    //let file = File::open("test.in")?;
     let mut reader = BufReader::new(file);
     let mut vec = VecDeque::<String>::new();
 
@@ -62,8 +62,8 @@ fn xmascheck(vec: &VecDeque<String>, i: &usize, j: &usize, a: isize , b: isize) 
     let i:isize = isize::try_from(i.clone()).unwrap();
     let j:isize = isize::try_from(j.clone()).unwrap();
     let ix = i+a*3;
-    let jx = i+b*3;
-    println!("{ix} {jx}"); 
+    let jx = j+b*3;
+    //println!("{ix} {jx}"); 
     if jx < 0 || ix < 0 { return false };
     let i1:usize = match (i+a*0).try_into() {
         Ok(n) => n,
@@ -135,5 +135,120 @@ fn xmascheck(vec: &VecDeque<String>, i: &usize, j: &usize, a: isize , b: isize) 
 
 
 fn part2() -> io::Result<()> {
+    //let file = File::open("input2.in")?;
+    let file = File::open("test2.in")?;
+    let mut reader = BufReader::new(file);
+    let mut vec = VecDeque::<String>::new();
+
+    let mut buffer = String::new();
+    reader.read_line(&mut buffer)?;
+
+
+    let len = buffer.len()-1;
+    let mut total = 0;
+
+    while buffer.len() > 2 {
+        vec.push_back((&buffer[..len]).to_string());
+        total += 1;
+
+        buffer = String::new();
+        reader.read_line(&mut buffer)?;
+    }
+
+    let mut appearances = 0;
+    for i in 0..total {
+        println!();
+        for j in 0..len {
+            if x_mascheck(&vec, &i, &j) { appearances += 1 };
+        }
+    }
+    println!("{appearances}");
     Ok(())
+}
+
+fn x_mascheck(vec: &VecDeque<String>, i: &usize, j: &usize) -> bool {
+    let i:isize = isize::try_from(i.clone()).unwrap();
+    let j:isize = isize::try_from(j.clone()).unwrap();
+
+    if j < 1 || i < 1 { return false };
+
+    let i0:usize = match (i).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}+0"); panic!("{s}") }
+    };
+    let j0:usize = match (i).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}+0"); panic!("{s}") }
+    };
+
+    let i1:usize = match (i+1).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}+1"); panic!("{s}") }
+    };
+    let j1:usize = match (i+1).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}+1"); panic!("{s}") }
+    };
+
+    let i2:usize = match (i-1).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}-1"); panic!("{s}") }
+    };
+    let j2:usize = match (i-1).try_into() {
+        Ok(n) => n,
+        Err(s) => { println!("{i}-1"); panic!("{s}") }
+    };
+
+    // Middle is always A
+    let x = match vec.get(i0) {
+        Some(s) => match s.chars().nth(j0) {
+            Some(c) => c,
+            None => return false,
+        },
+        None => return false,
+    };
+    println!("{i}, {j}; {i0}, {j0}: {x}");
+    if x != 'A' { return false; }
+
+
+
+    // Check top right/bot left
+    let x = match vec.get(i2) {
+        Some(s) => match s.chars().nth(j1) {
+            Some(c) => c,
+            None => return false,
+        },
+        None => return false,
+    };
+    let y = match vec.get(i1) {
+        Some(s) => match s.chars().nth(j2) {
+            Some(c) => c,
+            None => return false,
+        },
+        None => return false,
+    };
+    let mas = (x == 'M' && y == 'S') || (y == 'M' && x == 'S');
+    if !mas { return false; }
+
+
+    // Check top left/bot right
+    let x = match vec.get(i2) {
+        Some(s) => match s.chars().nth(j2) {
+            Some(c) => c,
+            None => return false,
+        },
+        None => return false,
+    };
+    let y = match vec.get(i1) {
+        Some(s) => match s.chars().nth(j1) {
+            Some(c) => c,
+            None => return false,
+        },
+        None => return false,
+    };
+    let mas = (x == 'M' && y == 'S') || (y == 'M' && x == 'S');
+    if !mas { return false; }
+
+
+    true
 }
